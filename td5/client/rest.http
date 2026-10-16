@@ -1,5 +1,35 @@
-### Default URL
-GET http://localhost:5000/
+@baseUrl = http://localhost:5000/api
 
-### Default API URL
-GET http://localhost:5000/api/
+### ==========================================
+### AUTHENTIFICATION (Routes Publiques)
+### ==========================================
+
+### 1. Inscrire un nouvel utilisateur
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "mon-email@example.com",
+  "password": "monSuperPassword123"
+}
+
+### 2. Se connecter (Récupère un JWT)
+# @name loginRequest
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "mon-email@example.com",
+  "password": "monSuperPassword123"
+}
+
+### ==========================================
+### CONTACTS (Routes Protégées)
+### ==========================================
+
+# Variable dynamique qui extrait le token de la réponse de la requête "loginRequest" ci-dessus
+@token = {{loginRequest.response.body.token}}
+
+### 3. Obtenir la liste des contacts (Nécessite le token)
+GET {{baseUrl}}/contacts
+Authorization: Bearer {{token}}
